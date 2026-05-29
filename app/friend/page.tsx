@@ -11,13 +11,13 @@ export const metadata = {
   description: "南宫有栖的友情鏈接。"
 };
 
-export default function FriendPage() {
+export default async function FriendPage() {
   const record = getPageContent("friend");
   if (!record) {
     notFound();
   }
 
-  const html = renderMarkdown(record.content);
+  const html = await renderMarkdown(record.content);
   const siteConfig = getSiteConfig();
 
   return (

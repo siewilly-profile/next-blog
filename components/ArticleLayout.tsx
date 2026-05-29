@@ -11,8 +11,8 @@ type ArticleLayoutProps = {
   showViews?: boolean;
 };
 
-export default function ArticleLayout({ record, backHref, backLabel, tagBasePath, showViews }: ArticleLayoutProps) {
-  const html = renderMarkdown(record.content);
+export default async function ArticleLayout({ record, backHref, backLabel, tagBasePath, showViews }: ArticleLayoutProps) {
+  const html = await renderMarkdown(record.content);
 
   return (
     <>

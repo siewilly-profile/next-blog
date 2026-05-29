@@ -5,6 +5,6 @@ marked.setOptions({
   breaks: true
 });
 
-export function renderMarkdown(markdownText: string): string {
-  return marked.parse(markdownText || "");
+export async function renderMarkdown(markdownText: string): Promise<string> {
+  return await marked.parse(markdownText || "");
 }

@@ -9,13 +9,13 @@ export const metadata = {
   description: "關於南宫有栖。"
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
   const record = getPageContent("about");
   if (!record) {
     notFound();
   }
 
-  const html = renderMarkdown(record.content);
+  const html = await renderMarkdown(record.content);
 
   return (
     <>
