@@ -1,3 +1,8 @@
+---
+title: "關於我"
+slug: "about"
+---
+
 <div class="about-profile">
     <div class="about-avatar-wrap">
         <img src="../images/owner_avatar.jpg" alt="siewilly" class="about-avatar">

@@ -1,192 +1,103 @@
 # 南宫有栖 Blog
 
-以古風視覺為主題的純靜態個人網站，主要包含首頁、題解、部落格、關於與友鏈頁面。
+以古風視覺為主題的個人網站，已遷移至 Next.js App Router + TypeScript + Tailwind。內容以 Markdown frontmatter 管理，支援文章搜尋、標籤、分頁、Giscus 留言與 GoatCounter 瀏覽統計（可選）。
 
 ## 專案摘要
 
-- 部署方式：GitHub Pages
-- 技術堆疊：HTML + CSS + Vanilla JavaScript
-- 內容來源：Markdown + `posts.json` 索引
-- Markdown 解析：`marked.js`（CDN）
+- 部署方式：Vercel
+- 技術堆疊：Next.js + TypeScript + Tailwind CSS
+- 內容來源：Markdown + frontmatter（不再依賴 `posts.json`）
+- Markdown 解析：`marked` + Highlight.js + KaTeX
 - 留言系統：giscus（可選）
 - 瀏覽統計：GoatCounter（可選）
 
-## 目前目錄
+## 主要路由
+
+- `/`：首頁
+- `/blog`：部落格列表
+- `/blog/[slug]`：部落格文章
+- `/solution`：题解分類
+- `/solution/[category]`：题解列表
+- `/solution/[category]/[slug]`：题解文章
+- `/about`：關於
+- `/friend`：友鏈
+
+## 內容結構
 
 ```text
-blog/
-├─ CNAME
-├─ index.html
-├─ README.md
-├─ images/
-├─ js/
-│  ├─ about.js
-│  ├─ blog.js
-│  ├─ burger.js
-│  ├─ engagement-config.js
-│  ├─ engagement.js
-│  ├─ friend.js
-│  ├─ giscus-config.js
-│  ├─ giscus.js
-│  ├─ home.js
-│  ├─ markdown-render.js
-│  ├─ petal.js
-│  ├─ solution-page.js
-│  ├─ transition.js
-│  └─ legacy/
-│     └─ script.js
-├─ pages/
-│  ├─ about.html
-│  ├─ APCS.html
-│  ├─ blog.html
-│  ├─ friend.html
-│  ├─ index.html
-│  ├─ solution.html
-│  └─ Zerojudge.html
-├─ posts/
-│  ├─ about/
-│  │  └─ about.md
-│  ├─ blog/
-│  │  ├─ posts.json
-│  │  ├─ s1.md
-│  │  └─ s2.md
-│  ├─ friend/
-│  │  └─ friend_page.md
-│  └─ solution/
-│     ├─ posts.json
-│     ├─ APCS/
-│     │  ├─ APCS_2026_03.md
-│     │  └─ posts.json
-│     └─ Zerojudge/
-│        ├─ b964.md
-│        ├─ b965.md
-│        ├─ b966.md
-│        ├─ b967.md
-│        ├─ c290.md
-│        ├─ e288.md
-│        ├─ e313.md
-│        ├─ f163.md
-│        └─ posts.json
-└─ styles/
-  ├─ home.css
-  └─ style.css
+posts/
+├─ blog/
+│  ├─ s1.md
+│  └─ s2.md
+├─ solution/
+│  ├─ APCS/
+│  └─ Zerojudge/
+├─ about/
+│  └─ about.md
+└─ friend/
+   └─ friend_page.md
 ```
 
-## 頁面與腳本對應
+## Frontmatter 格式
 
-- `pages/blog.html` -> `js/blog.js`
-- `pages/APCS.html`、`pages/Zerojudge.html` -> `js/solution-page.js`
-- `pages/about.html` -> `js/about.js`
-- `pages/friend.html` -> `js/friend.js`
-- 全站共用互動：`js/burger.js`、`js/transition.js`、`js/markdown-render.js`
+每篇 Markdown 檔案頂部需要 frontmatter：
 
-## 文章索引格式
-
-`posts.json` 統一使用以下格式：
-
-```json
-[
-  {
-   "slug": "example-post",
-   "title": "文章標題",
-   "date": "2026-04-11",
-   "description": "文章摘要",
-   "tags": ["tag1", "tag2"]
-  }
-]
+```yaml
+---
+title: "文章標題"
+slug: "my-post"
+date: "2026-04-11"
+description: "文章摘要"
+tags:
+  - "tag1"
+  - "tag2"
+category: "APCS" # 仅题解文章需要
+---
 ```
 
 欄位說明：
 
-- `slug`：Markdown 檔名（不含 `.md`），必填
 - `title`：標題，必填
+- `slug`：路由用 slug，必填
 - `date`：日期，格式 `YYYY-MM-DD`，必填
 - `description`：摘要，選填
 - `tags`：標籤陣列，選填
-
-## 內容維護流程
-
-### 新增部落格文章
-
-1. 在 `posts/blog/` 新增 `slug.md`。
-2. 在 `posts/blog/posts.json` 加入同 `slug` 的索引資料。
-3. 開啟 `pages/blog.html` 檢查列表、搜尋、標籤與內文頁。
-
-### 新增題解文章
-
-1. 在對應分類新增 Markdown：
-  - `posts/solution/APCS/`
-  - `posts/solution/Zerojudge/`
-2. 更新該分類的 `posts.json`。
-3. 分別檢查 `pages/APCS.html` 或 `pages/Zerojudge.html`。
-
-### 更新關於或友鏈
-
-- 關於：編輯 `posts/about/about.md`，到 `pages/about.html` 驗證。
-- 友鏈：編輯 `posts/friend/friend_page.md`，到 `pages/friend.html` 驗證。
+- `category`：题解類別，选填
 
 ## 本地開發
 
-使用任一靜態伺服器即可，範例：
-
 ```bash
-npx http-server . -p 8080 --cors -c-1
+npm install
+npm run dev
 ```
-
-或（Python）：
-
-```bash
-python -m http.server 8080
-```
-
-建議測試入口：
-
-- `http://localhost:8080/`
-- `http://localhost:8080/pages/index.html`
-
-## giscus 設定（可選）
-
-1. 在 GitHub Repository 啟用 Discussions。
-2. 到 <https://giscus.app/> 取得 `repo`、`repoId`、`category`、`categoryId`。
-3. 編輯 `.env`：
-  - `GISCUS_ENABLED=true`
-  - 填入 `GISCUS_REPO`、`GISCUS_REPO_ID`、`GISCUS_CATEGORY`、`GISCUS_CATEGORY_ID`
-
-備註：
-
-- `.env` 已加入 `.gitignore`，不會被 push 到 GitHub。
-- 網站會由 `js/env-loader.js` 在執行時優先讀取 `.env`（本機開發）。
-- 若部署環境拿不到 `.env`（例如 GitHub Pages），會自動回退讀取 `env.public.json`。
-
-目前掛載位置：
-
-- 部落格文章：`js/blog.js`
-- 題解文章：`js/solution-page.js`
-- 友鏈頁：`js/friend.js`
-
-## GoatCounter 設定（可選）
-
-1. 到 <https://www.goatcounter.com/> 建立站點。
-2. 取得 endpoint（例如 `https://myblog.goatcounter.com/count`）。
-3. 編輯 `.env`：
-  - `ENGAGEMENT_ENABLED=true`
-  - `ENGAGEMENT_ENDPOINT=你的 endpoint`
-
-補充：
-
-- `viewThrottleMinutes` 預設為 30 分鐘（同頁面節流）。
-- 全站載入統計邏輯由 `js/burger.js` 引入 `js/engagement.js`。
 
 ## 設定檔策略
 
-- 本機開發：使用 `.env`（不提交）。
-- 正式部署：使用 `env.public.json`（可提交，內容視為公開設定）。
-- 目前 `giscus` 與 `GoatCounter` 皆可由上述兩種設定檔提供值。
+- 可在 `.env` 或 `env.public.json` 設定 giscus 與 GoatCounter。
+- `env.public.json` 會在 build 時讀取，內容視為公開設定。
 
-## 維護建議
+### giscus（可選）
 
-- 新增文章時，務必同時更新 Markdown 與對應 `posts.json`。
-- 調整資料夾或檔名時，記得同步修正 HTML 的 script 路徑與 JS 的 `fetch` 路徑。
-- `js/legacy/` 為舊版備份，避免在新頁面再引用。
+必要欄位：
+
+- `GISCUS_ENABLED=true`
+- `GISCUS_REPO`
+- `GISCUS_REPO_ID`
+- `GISCUS_CATEGORY`
+- `GISCUS_CATEGORY_ID`
+
+### GoatCounter（可選）
+
+- `ENGAGEMENT_ENABLED=true`
+- `ENGAGEMENT_ENDPOINT=https://your.goatcounter.com/count`
+
+## 靜態資產
+
+圖片放在 `public/images/`，在 Markdown 或 JSX 中使用 `/images/...` 取用。
+
+## 舊版檔案
+
+原本的 HTML/JS/CSS 仍保留在根目錄（`index.html`、`pages/`、`js/`、`styles/`）作為參考，但已不再由 Next.js 使用。
+
 # 紀念
-4/12我發現了我的網站API在裸奔，現在收起來了耶
+4/12 我發現了我的網站 API 在裸奔，現在收起來了耶
